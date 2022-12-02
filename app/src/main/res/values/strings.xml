@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">appOrganizadorDeFotos</string>
+    <array name="categorias">
+        <item>Escuela</item>
+        <item>Amigos</item>
+        <item>Fiesta</item>
+        <item>Tarea</item>
+    </array>
 </resources>
