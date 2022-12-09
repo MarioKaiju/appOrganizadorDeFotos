@@ -1,5 +1,5 @@
 
-package util.permisos.apporganizadordefotos;
+package mx.edu.itl.c18131289.apporganizadordefotos;
 /*------------------------------------------------------------------------------------------*/
 
 import android.content.Intent;
