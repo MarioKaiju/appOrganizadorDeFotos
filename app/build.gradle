@@ -25,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'mx.edu.itl.c18131289.apporganizadordefotos'
 }
 
 dependencies {
