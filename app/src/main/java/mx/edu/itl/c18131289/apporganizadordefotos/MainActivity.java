@@ -6,13 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,8 +31,11 @@ import util.permisos.ChecadorDePermisos;
 import util.permisos.PermisoApp;
 
 public class MainActivity extends AppCompatActivity {
-
+    SpinnerCategoriasAdapter adaptador;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor sharedPrefEditor;
     private Spinner spinnerCategorias;
+    private EditText editTextAgregarCategoria;
     private ArrayList<CategoriaFoto> categorias;
     private String categoriaSeleccionada;
     private PermisoApp[] permisosReq = {
@@ -41,20 +48,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedPref = this.getSharedPreferences(
+                getString(R.string.app_name), Context.MODE_PRIVATE);
+        sharedPrefEditor = sharedPref.edit ();
+
+        if ( sharedPref.getAll().isEmpty() ) {
+            inicializarCategorias();
+        }
+
+        categorias = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ChecadorDePermisos.checarPermisos ( this, permisosReq );
 
         spinnerCategorias = findViewById ( R.id.spinnerCategorias );
-
-        inicializarCategorias ();
-        categoriaSeleccionada = categorias.get ( 0 ).getCategoria();
-
-        SpinnerCategoriasAdapter adaptador = new SpinnerCategoriasAdapter ( this, categorias );
-        adaptador.setDropDownViewResource ( android.R.layout.simple_spinner_dropdown_item );
-        // Establecer el adaptador para el spinner
-        spinnerCategorias.setAdapter ( adaptador );
+        editTextAgregarCategoria = findViewById ( R.id.editTextAñadirCategoría );
+        
+        recargarCategorias ();
 
         spinnerCategorias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -79,11 +90,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void inicializarCategorias () {
-        categorias = new ArrayList<>();
-        String [] categoriasAgregadas = getResources().getStringArray ( R.array.categorias );
+        String [] categoriasIniciales = getResources().getStringArray ( R.array.categorias );
+        for (int i = 0; i < categoriasIniciales.length; i++) {
+            sharedPrefEditor.putString( categoriasIniciales[i], categoriasIniciales[i] );
+        }
+        sharedPrefEditor.apply();
+    }
+
+    private void recargarCategorias () {
+        categorias.clear();
+        String [] categoriasAgregadas = sharedPref.getAll().keySet().toArray(new String[0]);
         for (int i = 0; i < categoriasAgregadas.length; i++) {
             categorias.add ( new CategoriaFoto ( categoriasAgregadas [i] ) );
         }
+
+        // Establecer el adaptador para el spinner
+        adaptador = new SpinnerCategoriasAdapter ( this, categorias );
+        adaptador.setDropDownViewResource ( android.R.layout.simple_spinner_dropdown_item );
+
+        spinnerCategorias.setAdapter ( adaptador );
     }
 
     public void buttonTomarFotografia ( View v ) {
@@ -121,5 +146,37 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText( this, "Se guardó la foto", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void buttonAgregarCategoria ( View v ) {
+        String categoriaPorAñadir = editTextAgregarCategoria.getText().toString().trim();
+        if ( categoriaPorAñadir.length() == 0 ) {
+            editTextAgregarCategoria.setError ( "No puede estar vacío" );
+            editTextAgregarCategoria.requestFocus ();
+            return;
+        }
+        for ( int i = 0; i < categorias.size(); i++ ) {
+            if ( categorias.get(i).getCategoria().toLowerCase().equals(categoriaPorAñadir)) {
+                editTextAgregarCategoria.setError ( "Ya existe esa categoría" );
+                editTextAgregarCategoria.requestFocus ();
+                return;
+            }
+        }
+        editTextAgregarCategoria.setText ("");
+
+        sharedPrefEditor.putString (categoriaPorAñadir, categoriaPorAñadir);
+        sharedPrefEditor.apply();
+
+        editTextAgregarCategoria.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editTextAgregarCategoria.getWindowToken(), 0);
+
+        Toast.makeText(this, "Categoría añadida", Toast.LENGTH_SHORT).show();
+
+        recargarCategorias();
+    }
+
+    public void buttonAbrirGaleria ( View v ) {
+
     }
 }
