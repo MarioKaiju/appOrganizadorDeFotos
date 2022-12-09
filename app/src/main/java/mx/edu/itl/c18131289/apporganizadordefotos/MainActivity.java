@@ -19,12 +19,12 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import android.view.MenuItem;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+import android.view.Menu;
 import modelo.CategoriaFoto;
 import modelo.SpinnerCategoriasAdapter;
 import util.permisos.ChecadorDePermisos;
@@ -178,5 +178,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonAbrirGaleria ( View v ) {
 
+    }
+    
+    public boolean onCreateOptionsMenu(Menu menu){
+            getMenuInflater().inflate(R.menu.menu_comun,menu);
+            return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch ( id ) {
+            case R.id.mniAcercaDe : Intent intent = new Intent(this, AcercaDeActivity.class);
+            startActivity(intent);
+            break;
+            default               : return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }
