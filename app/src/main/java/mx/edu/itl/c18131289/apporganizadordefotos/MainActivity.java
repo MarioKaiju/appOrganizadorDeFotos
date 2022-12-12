@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonAbrirGaleria ( View v ) {
      Intent intent = new Intent(this,ImagenActivity.class);
+     intent.putExtra ( "categoria", categoriaSeleccionada );
      startActivity(intent);
     }
     

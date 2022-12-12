@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,6 +23,7 @@ import modelo.ImageAdapter;
 public class ImagenActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<Image> arrayList = new ArrayList<>();
+    String categoriaSeleccionada;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
             result -> {
                 if (result) {
@@ -35,6 +37,8 @@ public class ImagenActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(ImagenActivity.this));
         recyclerView.setHasFixedSize(true);
+
+        categoriaSeleccionada = this.getIntent().getStringExtra("categoria");
 
         if (ActivityCompat.checkSelfPermission(ImagenActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -53,7 +57,14 @@ public class ImagenActivity extends AppCompatActivity {
 
     private void getImages(){
         arrayList.clear();
-        String filePath = "/storage/emulated/0/Pictures";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator
+                + "DCIM"
+                + File.separator
+                + "Organizador"
+                + File.separator
+                + categoriaSeleccionada
+                + File.separator;
         File file = new File(filePath);
         File[] files = file.listFiles();
         if (files != null) {
