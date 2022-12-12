@@ -69,18 +69,17 @@ public class ImagenActivity extends AppCompatActivity {
                 + File.separator;
         File file = new File(filePath);
         File[] files = file.listFiles();
-        if (files.length == 0) {
+        if ( files == null || files.length == 0 ) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Este directorio esta vacio")
                     .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                         finish();
+                            finish();
                         }
                     });
             AlertDialog alert = builder.create();
             alert.show();
-
         }
         else
         {
