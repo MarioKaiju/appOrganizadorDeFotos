@@ -2,13 +2,16 @@ package mx.edu.itl.c18131289.apporganizadordefotos;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +55,37 @@ public class ImagenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getImages();
+        NoImages();
+     //   getImages();
+    }
+    public void NoImages(){
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
+                + File.separator
+                + "DCIM"
+                + File.separator
+                + "Organizador"
+                + File.separator
+                + categoriaSeleccionada
+                + File.separator;
+        File file = new File(filePath);
+        File[] files = file.listFiles();
+        if (files.length == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Este directorio esta vacio")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                         finish();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
+        else
+        {
+            getImages();
+        }
     }
 
     private void getImages(){
@@ -72,6 +105,7 @@ public class ImagenActivity extends AppCompatActivity {
                 if (file1.getPath().endsWith(".png") || file1.getPath().endsWith(".jpg")) {
                     arrayList.add(new Image(file1.getName(), file1.getPath(), file1.length()));
                 }
+
             }
         }
         ImageAdapter adapter = new ImageAdapter(ImagenActivity.this, arrayList);

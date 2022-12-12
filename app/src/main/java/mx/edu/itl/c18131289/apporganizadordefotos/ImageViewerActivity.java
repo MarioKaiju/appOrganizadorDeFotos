@@ -45,8 +45,8 @@ public class ImageViewerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(ImageViewerActivity.this);
-                alertDialogBuilder.setMessage("Are you sure you want to delete this image ?");
-                alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                alertDialogBuilder.setMessage("Estas seguro de eliminar esta imagen ?");
+                alertDialogBuilder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String[] projection = new String[]{MediaStore.Images.Media._ID};
@@ -62,14 +62,14 @@ public class ImageViewerActivity extends AppCompatActivity {
                                 contentResolver.delete(deleteUri, null, null);
                                 boolean delete1 = new File(finalPath).delete();
                                 Log.e("TAG", delete1 + "");
-                                Toast.makeText(ImageViewerActivity.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ImageViewerActivity.this, "Eliminada Correctamente", Toast.LENGTH_SHORT).show();
                                 finish();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(ImageViewerActivity.this, "Error Deleting Video", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ImageViewerActivity.this, "Error al borrar", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(ImageViewerActivity.this, "File Not Find", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ImageViewerActivity.this, "Archivo No Encontrado", Toast.LENGTH_SHORT).show();
                         }
                         cursor.close();
                     }
