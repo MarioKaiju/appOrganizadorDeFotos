@@ -53,7 +53,7 @@ public class ImagenActivity extends AppCompatActivity {
 
     private void getImages(){
         arrayList.clear();
-        String filePath = "/storage/emulated/0/Pictures";
+        String filePath = "/storage/emulated/DCIM/Organizador/Amigos/";
         File file = new File(filePath);
         File[] files = file.listFiles();
         if (files != null) {
