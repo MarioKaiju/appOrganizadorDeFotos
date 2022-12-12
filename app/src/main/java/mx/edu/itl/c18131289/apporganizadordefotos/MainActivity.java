@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonAbrirGaleria ( View v ) {
-
+     Intent intent = new Intent(this,ImagenActivity.class);
+     startActivity(intent);
     }
     
     public boolean onCreateOptionsMenu(Menu menu){

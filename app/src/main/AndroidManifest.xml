@@ -33,6 +33,14 @@
             android:name=".AcercaDeActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".ImageViewerActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ImagenActivity"
+            android:exported="true">
+        </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="mx.edu.itl.c18131289.apporganizadordefotos.provider"
